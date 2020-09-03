@@ -1,0 +1,23 @@
+steps:
+  - label: "Setup Bridgecrew.cloud agent"
+    command: 
+      - apk add python3
+      - git clone https://github.com/bridgecrewio/bridgecrew-action.git
+      - python3 -m pip install -r bridgecrew-action/requirements.txt
+      - cp bridgecrew-action/bridgecrew-problem-matcher.json /usr/local/lib/bridgecrew-problem-matcher.json
+
+  - label: "Local IaC Scan" 
+        # If we don't have a bridgecrew.cloud API key, run a local scan. 
+        # returns 1 if IaC issues are found.
+    command:
+        - if [[ -z "${BC_API_KEY}" ]]; then bridgecrew -d ${BUILDKITE_BUILD_CHECKOUT_PATH} ; fi
+
+  - label: "Extract repo details"
+    command:
+        - echo ${BUILDKITE_REPO} | sed -nr  's/^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+).git$$/\4\/\5/p' | buildkite-agent meta-data set "repoDetails"
+
+  - label: "Bridgecrew.cloud Scan" 
+    command:
+        - export GIT_REPO=`buildkite-agent meta-data get "repoDetails"`
+        - echo "Git Repository $${GIT_REPO}. Remote; ${BUILDKITE_REPO}"
+        - if [[ ! -z "${BC_API_KEY}" ]]; then bridgecrew --quiet --bc-api-key ${BC_API_KEY} --branch ${BUILDKITE_BRANCH} --repo-id $${GIT_REPO} -d ${BUILDKITE_BUILD_CHECKOUT_PATH} ; fi
