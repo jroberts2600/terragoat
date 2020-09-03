@@ -5,6 +5,9 @@ resource "aws_s3_bucket" "data" {
   # bucket does not have versioning
   bucket        = "${local.resource_prefix.value}-data"
   acl           = "public-read"
+  versioning {
+    enabled = true
+  }
   force_destroy = true
   tags = {
     Name        = "${local.resource_prefix.value}-data"
@@ -28,6 +31,9 @@ resource "aws_s3_bucket" "financials" {
   # bucket does not have versioning
   bucket        = "${local.resource_prefix.value}-financials"
   acl           = "private"
+  versioning {
+    enabled = true
+  }
   force_destroy = true
   tags = {
     Name        = "${local.resource_prefix.value}-financials"
