@@ -9,7 +9,7 @@ resource azurerm_app_service_plan "example" {
   }
 }
 
-resource azurerm_app_service "app-service1" {
+resource azurerm_app_service "app-service1.1" {
   app_service_plan_id = azurerm_app_service_plan.example.id
   location            = var.location
   name                = "terragoat-app-service-${var.environment}${random_integer.rnd_int.result}"
