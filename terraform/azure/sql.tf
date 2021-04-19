@@ -48,7 +48,7 @@ resource "azurerm_mysql_server" "example" {
   backup_retention_days             = 7
   infrastructure_encryption_enabled = true
   public_network_access_enabled     = true
-  ssl_enforcement_enabled           = false
+  ssl_enforcement_enabled           = true
 }
 
 resource "azurerm_postgresql_server" "example" {
