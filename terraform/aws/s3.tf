@@ -11,7 +11,7 @@ resource "aws_s3_bucket" "data" {
     Environment = local.resource_prefix.value
   }
   versioning {
-    enabled = false
+    enabled = true
   }
 }
 
